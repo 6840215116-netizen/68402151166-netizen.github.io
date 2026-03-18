@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>คอมเทพ - Content</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; background:#1c1c1c; color:#f5d300; }
+
+/* Navbar */
+.navbar { display:flex; justify-content:space-between; align-items:center; background:#000; padding:15px 40px; border-bottom:1px solid #333; }
+.logo { font-size:22px; font-weight:bold; }
+.menu a { color:#f5d300; margin-left:25px; text-decoration:none; font-weight:bold; }
+.menu a:hover { color:white; }
+
+/* Content */
+.container { padding:20px; max-width:1000px; margin:auto; }
+.products { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:20px; }
+.product-card { background:#2c2c2c; border-radius:10px; padding:10px; box-shadow:0 0 15px rgba(245,211,0,0.4); display:flex; flex-direction:column; }
+.product-card img { width:100%; height:150px; object-fit:cover; border-radius:8px; border:2px solid #f5d300; }
+.btn-group { display:flex; gap:10px; margin-top:10px; }
+.btn-group button { flex:1; padding:8px; background:#f5d300; color:#000; border:none; cursor:pointer; border-radius:5px; font-weight:bold; }
+.btn-group button:hover { background:#e6c200; }
+
+/* Popup รายละเอียด */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; }
+.modal-content { background:#2c2c2c; padding:20px; border-radius:10px; width:350px; text-align:center; }
+.modal-content img { width:100%; height:200px; object-fit:cover; border-radius:8px; border:2px solid #f5d300; margin-bottom:10px; }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">🖥️ ร้าน คอมเทพ</div>
+  <nav class="menu">
+    <a href="Home.html">Home</a>
+    <a href="About.html">About</a>
+    <a href="Content.html">Content</a>
+    <a href="Contact.html">Contact</a>
+    <a href="cart.html">
+	<span style="font-size:20px;">🛒</span>
+      <span id="cart-count" style="font-weight:bold; color:#f5d300;">0</span>
+	</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>สินค้าและบริการ</h1>
+  <div class="products" id="product-list"></div>
+</div>
+
+<!-- Popup รายละเอียด -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <img id="pImg" src="">
+    <h2 id="pName"></h2>
+    <p id="pDesc"></p>
+    <p id="pPrice"></p>
+    <button onclick="closeModal()">ปิด</button>
+  </div>
+</div>
+
+<script>
+// ข้อมูลสินค้า
+const products = [
+  {name:'AMD RYZEN 5 5500GT', desc:'CPU 6 คอร์ 12 เธรด เหมาะสำหรับเล่นเกมและทำงาน', price:1, img:'AMD RYZEN 5 5500GT.jpg'},
+  {name:'INTEL I5-12400', desc:'CPU 6 คอร์ ประสิทธิภาพสูง เหมาะสำหรับเกมและงานทั่วไป', price:100, img:'INTEL I5-12400.jpg'},
+  {name:'AMD RYZEN 7 5800X', desc:'CPU 8 คอร์ 16 เธรด เล่นเกม + งานตัดต่อได้สบาย', price:100000, img:'AMD RYZEN 7 5800X.jpg'},
+  {name:'INTEL I7-12700', desc:'CPU 12 คอร์ ประสิทธิภาพสูงสำหรับงานหนัก', price:500000, img:'INTEL I7-12700.jpg'},
+  {name:'NVIDIA RTX 3060', desc:'การ์ดจอสำหรับเล่นเกม 1080p/1440p', price:600000, img:'NVIDIA RTX 3060.jpg'},
+  {name:'NVIDIA RTX 3070', desc:'การ์ดจอสำหรับเล่นเกม 1440p/4K', price:10000000, img:'NVIDIA RTX 3070.jpg'},
+  {name:'SSD 1TB NVMe', desc:'จัดเก็บข้อมูลเร็วแรง', price:30000, img:'SSD 1TB NVMe.jpg'},
+  {name:'SSD 2TB NVMe', desc:'จัดเก็บข้อมูลใหญ่และเร็ว', price:6000, img:'SSD 2TB NVMe.jpg'},
+  {name:'RAM 16GB DDR4', desc:'เพิ่มความเร็วเครื่อง', price:9000, img:'RAM 16GB DDR4.jpg'},
+  {name:'RAM 32GB DDR4', desc:'เหมาะสำหรับงานตัดต่อและเกมหนัก', price:120000, img:'RAM 32GB DDR4.jpg'},
+  {name:'Motherboard B550', desc:'รองรับ AMD Ryzen', price:4500, img:'Motherboard B550.jpg'},
+  {name:'Motherboard Z690', desc:'รองรับ Intel 12th Gen', price:6200, img:'Motherboard Z690.jpg'}
+];
+
+// แสดงสินค้า
+const productList = document.getElementById('product-list');
+products.forEach(p=>{
+  const card=document.createElement('div');
+  card.className='product-card';
+  card.innerHTML=`
+    <img src="${p.img}">
+    <h3>${p.name}</h3>
+    <p>ราคา ${p.price.toLocaleString()} บาท</p>
+    <div class="btn-group">
+      <button onclick="addToCart('${p.name}',${p.price})">เพิ่มลงตะกร้า</button>
+      <button onclick="showDetail('${p.name}','${p.desc}',${p.price},'${p.img}')">รายละเอียด</button>
+    </div>
+  `;
+  productList.appendChild(card);
+});
+
+// Popup รายละเอียด
+function showDetail(name, desc, price, img){
+  document.getElementById("pName").innerText=name;
+  document.getElementById("pDesc").innerText=desc;
+  document.getElementById("pPrice").innerText="ราคา: "+price.toLocaleString()+" บาท";
+  document.getElementById("pImg").src=img;
+  document.getElementById("productModal").style.display="flex";
+}
+function closeModal(){ document.getElementById("productModal").style.display="none"; }
+
+// เพิ่มสินค้าในตะกร้า (เก็บใน localStorage)
+function addToCart(name, price){
+  let cart=JSON.parse(localStorage.getItem('cart'))||[];
+  let index=cart.findIndex(item=>item.name===name);
+  if(index!==-1) cart[index].quantity+=1;
+  else cart.push({name:name, price:price, quantity:1});
+  localStorage.setItem('cart', JSON.stringify(cart));
+  document.getElementById('cart-count').innerText=cart.length;
+  alert(name + " ถูกเพิ่มลงในตะกร้าแล้ว!");
+}
+
+// โหลดจำนวนสินค้าที่ตะกร้า
+window.onload = function(){
+  let cart=JSON.parse(localStorage.getItem('cart'))||[];
+  document.getElementById('cart-count').innerText=cart.length;
+}
+</script>
+
+</body>
+</html>

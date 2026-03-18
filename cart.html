@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>คอมเทพ - Cart</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; background: #1c1c1c; color: #f5d300; }
+/* Navbar */
+.navbar { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 15px 40px; border-bottom: 1px solid #333; }
+.logo { font-size: 22px; font-weight: bold; }
+.menu a { color: #f5d300; margin-left: 25px; text-decoration: none; font-weight: bold; }
+.menu a:hover { color: white; }
+
+/* Container */
+.container { padding: 20px; max-width: 900px; margin: auto; }
+h1 { text-align: center; }
+button { padding: 8px 15px; background: #f5d300; border: none; border-radius: 5px; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
+button:hover { background: #e6c200; }
+.total { text-align: right; margin-top: 20px; font-size: 18px; font-weight: bold; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { padding: 12px; border-bottom: 1px solid #444; text-align: center; }
+th { background: #333; }
+.empty-msg { text-align: center; margin-top: 40px; font-size: 20px; color: #aaa; }
+.remove-btn { background: #e74c3c; color: #fff; border-radius:5px; }
+.remove-btn:hover { background: #c0392b; }
+.clear-btn { margin-bottom: 10px; }
+.checkout-btn { margin-top: 20px; display: block; }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">🖥️ ร้าน คอมเทพ</div>
+  <nav class="menu">
+    <a href="Home.html">Home</a>
+    <a href="About.html">About</a>
+    <a href="Content.html">Content</a>
+    <a href="Contact.html">Contact</a>
+  
+	</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>ตะกร้าสินค้าของคุณ</h1>
+
+  <!-- ปุ่มลบสินค้าทั้งหมด -->
+  <button class="clear-btn" onclick="clearCart()">ลบสินค้าทั้งหมด</button>
+
+  <div id="cart-content"></div>
+  <div class="total" id="total-price"></div>
+
+  <!-- ปุ่มสั่งซื้อสินค้า -->
+  <button class="checkout-btn" onclick="checkout()">สั่งซื้อสินค้า</button>
+</div>
+
+<script>
+function renderCart() {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const cartContent = document.getElementById('cart-content');
+  const totalPriceElem = document.getElementById('total-price');
+
+  if(cart.length === 0) {
+    cartContent.innerHTML = '<p class="empty-msg">ตะกร้าของคุณยังไม่มีสินค้า</p>';
+    totalPriceElem.innerText = '';
+    return;
+  }
+
+  let tableHTML = `<table>
+    <thead>
+      <tr>
+        <th>สินค้า</th>
+        <th>ราคา (บาท)</th>
+        <th>จำนวน</th>
+        <th>รวม (บาท)</th>
+        <th>ลบ</th>
+      </tr>
+    </thead>
+    <tbody>`;
+
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+
+    tableHTML += `
+      <tr>
+        <td>${item.name}</td>
+        <td>${item.price.toLocaleString()}</td>
+        <td>${item.quantity}</td>
+        <td>${itemTotal.toLocaleString()}</td>
+        <td><button class="remove-btn" onclick="removeItem(${index})">ลบ</button></td>
+      </tr>
+    `;
+  });
+
+  tableHTML += '</tbody></table>';
+
+  cartContent.innerHTML = tableHTML;
+  totalPriceElem.innerText = `ยอดรวมทั้งหมด: ${total.toLocaleString()} บาท`;
+}
+
+function removeItem(index) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  renderCart();
+}
+
+function clearCart() {
+  if(confirm("คุณต้องการลบสินค้าทั้งหมดจากตะกร้าหรือไม่?")) {
+    localStorage.removeItem('cart');
+    renderCart();
+  }
+}
+
+// ฟังก์ชันสั่งซื้อสินค้า
+function checkout() {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if(cart.length === 0){
+    alert("ตะกร้าว่าง! กรุณาเพิ่มสินค้า");
+    return;
+  }
+
+  let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  alert(`คุณได้สั่งซื้อสินค้าเรียบร้อย!\nยอดรวมทั้งหมด: ${total.toLocaleString()} บาท`);
+  
+  // ล้างตะกร้าหลังสั่งซื้อ
+  localStorage.removeItem('cart');
+  renderCart();
+}
+
+// โหลดข้อมูลตอนเปิดหน้า
+renderCart();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>คอมเทพ - About</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin:0;
+  background:#1c1c1c;
+  color:#f5d300;
+}
+
+/* ----------------- Header / Navigation ----------------- */
+header {
+  background: #000;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+header .logo {
+  color: #f5d300;
+  font-weight: bold;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+header .logo::before {
+  content: "\1F5A5"; /* emoji คอมพิวเตอร์ */
+  margin-right: 8px;
+}
+
+nav a {
+  color: #f5d300;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+nav a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 5px #f5d300;
+}
+
+/* ----------------- Cart icon ----------------- */
+.cart-link {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  color: #f5d300;
+  text-decoration: none;
+  margin-left: 20px;
+}
+.cart-link span {
+  margin-left: 5px;
+}
+
+/* ----------------- Container / เนื้อหา ----------------- */
+.container {
+  padding: 40px 20px;
+  text-align: center;
+  max-width: 800px;
+  margin: auto;
+}
+
+.container h1 {
+  margin-top: 40px;
+}
+
+.container p {
+  font-size: 18px;
+  margin: 15px 0;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* ----------------- Highlights ----------------- */
+.highlight {
+  background: rgba(245,211,0,0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+/* ----------------- Responsive ----------------- */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+  nav a {
+    display: block;
+    margin: 8px 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ร้าน คอมเทพ</div>
+  <nav>
+    <a href="Home.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="content.html">Content</a>
+    <a href="contact.html">Contact</a>
+    <a href="cart.html" class="cart-link">
+  
+    </a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>เกี่ยวกับเรา</h1>
+  <p>
+    เว็บไซต์ <strong>คอมเทพ</strong> ก่อตั้งขึ้นเพื่อให้ผู้สนใจคอมพิวเตอร์และอุปกรณ์ไอทีทุกประเภท สามารถเลือกซื้อสินค้าคุณภาพสูงได้ง่ายและสะดวก
+    เรามีสินค้าใหม่ล่าสุดจากแบรนด์ชั้นนำ ทั้ง CPU, การ์ดจอ, RAM, SSD, และอุปกรณ์เสริมต่างๆ
+  </p>
+
+  <div class="highlight">
+    <h3>สำหรับเกมเมอร์</h3>
+    <p>เราเสนออุปกรณ์ที่เหมาะสำหรับการเล่นเกม ทั้งการ์ดจอแรง, CPU ประสิทธิภาพสูง และ RAM ความเร็วสูง เพื่อให้เกมของคุณลื่นไหลไม่มีสะดุด</p>
+  </div>
+
+  <div class="highlight">
+    <h3>สำหรับงานตัดต่อและงานกราฟิก</h3>
+    <p>เราแนะนำชุดคอมที่เหมาะกับงานตัดต่อวิดีโอ งานกราฟิก หรือ 3D Rendering โดยเลือก CPU, GPU และ RAM ที่เหมาะสมกับการประมวลผลหนัก</p>
+  </div>
+
+  <div class="highlight">
+    <h3>คำแนะนำจากผู้เชี่ยวชาญ</h3>
+    <p>ทีมงานของเราพร้อมให้คำปรึกษาเกี่ยวกับการประกอบเครื่อง การเลือกซื้ออุปกรณ์ และการปรับแต่งคอมให้เหมาะกับความต้องการของคุณ</p>
+  </div>
+
+  <div class="highlight">
+    <h3>บริการครบวงจร</h3>
+    <p>ไม่ว่าคุณจะต้องการซื้ออุปกรณ์เดี่ยวหรือประกอบเครื่องใหม่ เรามีบริการจัดส่งและคำแนะนำหลังการขาย เพื่อให้คุณมั่นใจในคุณภาพและความพอใจสูงสุด</p>
+  </div>
+</div>
+
+<script>
+// โหลดจำนวนสินค้าที่ตะกร้า
+window.onload = function(){
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  document.getElementById('cart-count').innerText = cart.length;
+}
+</script>
+
+</body>
+</html>
